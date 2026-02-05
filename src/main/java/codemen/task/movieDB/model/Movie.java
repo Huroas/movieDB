@@ -1,6 +1,8 @@
 package codemen.task.movieDB.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Entity
@@ -9,13 +11,14 @@ import lombok.Data;
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    String Id;
+    String movieId;
 
-    String title;       //Elokuvan nimi (merkkijono).
-    String genre;       //Elokuvan genre (merkkijono, esim. "Sci-Fi", "Comedy", "Drama").
-    int releaseYear;    //Elokuvan julkaisuvuosi (numero).
-    String director;    //Elokuvan ohjaaja (merkkijono).
-    int rating;         //Elokuvan arvio (numero, esim. 1–10).
+    @NotBlank(message = "Title is missing")
+    String title;
+    String genre;
+    String director;
+    Integer releaseYear;
+    Integer rating;
 
     @Version
     private Long version;

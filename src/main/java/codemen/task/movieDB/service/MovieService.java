@@ -20,8 +20,8 @@ public class MovieService {
         return repository.findAll();
     }
 
-    public Movie getMovieById(String id) {
-        return repository.findById(id).orElse(null);
+    public List<Movie> getMoviesByTitle(String title) {
+        return repository.findByTitleContainingIgnoreCase(title);
     }
 
     @Transactional
