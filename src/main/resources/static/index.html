@@ -3,44 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Movies</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        .movie {
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 10px;
-        }
-        .details {
-            display: none;
-            margin-top: 10px;
-        }
-        button {
-            padding: 6px 12px;
-            cursor: pointer;
-        }
-        .arrow {
-            cursor: pointer;
-            font-size: 18px;
-            margin-right: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/app.css">
+    <script src="/js/app.js" defer></script>
 </head>
 <body>
 
 <!-- Haku -->
 <div>
-    <input type="text" id="searchInput" placeholder="Search by title" style="width: 300px; padding:4px;">
+    <input type="text" id="searchInput" placeholder="Search by title" class="search-input">
 </div>
-<div style="margin-top:5px; margin-bottom:15px;">
+<div class="search-actions">
     <button onclick="searchMovie()">Search</button>
     <button onclick="loadMovies()">Clear</button>
 </div>
@@ -55,7 +27,7 @@
 <div id="movie-list"></div>
 
 <!-- Add Movie Form -->
-<div id="addForm" style="display:none; border:1px solid #ccc; padding:10px; border-radius:6px;">
+<div id="addForm" class="add-form">
     <h3>Add Movie</h3>
     <input id="addTitle" placeholder="Title"><br><br>
     <input id="addGenre" placeholder="Genre"><br><br>
@@ -65,180 +37,6 @@
     <button onclick="addMovie()">Save</button>
     <button onclick="hideAddForm()">Cancel</button>
 </div>
-
-<script>
-    const api = "/api/movies";
-
-    async function loadMovies() {
-        const res = await fetch(api);
-        const movies = await res.json();
-        const list = document.getElementById("movie-list");
-        list.innerHTML = "";
-
-        movies.forEach(m => {
-            const div = document.createElement("div");
-            div.className = "movie";
-
-            div.innerHTML = `
-                <div>
-                    <span class="arrow" onclick="toggleDetails('d${m.movieId}')">&#9660;</span>
-                    <strong>${m.title}</strong> (${m.releaseYear || 'N/A'})
-                </div>
-
-                <div id="d${m.movieId}" class="details">
-                    <label>Title: <input value="${m.title || ''}" id="title${m.movieId}"></label><br><br>
-                    <label>Genre: <input value="${m.genre || ''}" id="genre${m.movieId}"></label><br><br>
-                    <label>Release Year: <input type="number" value="${m.releaseYear || ''}" id="releaseYear${m.movieId}"></label><br><br>
-                    <label>Director: <input value="${m.director || ''}" id="director${m.movieId}"></label><br><br>
-                    <label>Rating (1–10): <input type="number" value="${m.rating || ''}" id="rating${m.movieId}"></label><br><br>
-
-                    <button onclick="updateMovie('${m.movieId}')">Update</button>
-                    <button onclick="deleteMovie('${m.movieId}')" style="background:red;color:white;">Delete</button>
-                </div>
-            `;
-
-            list.appendChild(div);
-        });
-    }
-
-    function toggleDetails(id) {
-        const el = document.getElementById(id);
-        const style = window.getComputedStyle(el);
-        if (style.display === "none") {
-            el.style.display = "block";
-        } else {
-            el.style.display = "none";
-        }
-    }
-
-    function showAddForm() {
-        document.getElementById("addTitle").value = "";
-        document.getElementById("addGenre").value = "";
-        document.getElementById("addReleaseYear").value = "";
-        document.getElementById("addDirector").value = "";
-        document.getElementById("addRating").value = "";
-        document.getElementById("addForm").style.display = "block";
-    }
-
-    function hideAddForm() {
-        document.getElementById("addForm").style.display = "none";
-    }
-
-    async function login() {
-        const username = prompt("Username:");
-        const password = prompt("Password:");
-
-        if (!username || !password) return alert("Login cancelled");
-
-        window.authHeader = "Basic " + btoa(username + ":" + password);
-
-        alert("Login successful!");
-    }
-
-    async function addMovie() {
-        const movie = {
-            title: document.getElementById("addTitle").value,
-            genre: document.getElementById("addGenre").value,
-            releaseYear: parseInt(document.getElementById("addReleaseYear").value) || null,
-            director: document.getElementById("addDirector").value,
-            rating: parseInt(document.getElementById("addRating").value) || null
-        };
-
-        const res = await fetch(api, {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(movie)
-        });
-
-        if (!res.ok) {
-            const errorData = await res.json();
-            let message = '';
-            for (let key in errorData) {
-                message += `${key}: ${errorData[key]}\n`;
-            }
-            alert(message);
-            return;
-        }
-
-        hideAddForm();
-        loadMovies();
-    }
-
-
-    async function searchMovie() {
-        const query = document.getElementById("searchInput").value.trim();
-        if (!query) return loadMovies(); // jos tyhjä, näytä kaikki
-
-        // Oletetaan backendissä endpoint: /api/movies/search?title=xxx
-        const res = await fetch(`${api}/search?title=${encodeURIComponent(query)}`);
-        const movies = await res.json();
-
-        const list = document.getElementById("movie-list");
-        list.innerHTML = "";
-
-        movies.forEach(m => {
-            const div = document.createElement("div");
-            div.className = "movie";
-
-            div.innerHTML = `
-                <div>
-                    <span class="arrow" onclick="toggleDetails('d${m.movieId}')">&#9660;</span>
-                    <strong>${m.title}</strong> (${m.releaseYear || 'N/A'})
-                </div>
-
-                <div id="d${m.movieId}" class="details">
-                    <label>Title: <input value="${m.title || ''}" id="title${m.movieId}"></label><br><br>
-                    <label>Genre: <input value="${m.genre || ''}" id="genre${m.movieId}"></label><br><br>
-                    <label>Release Year: <input type="number" value="${m.releaseYear || ''}" id="releaseYear${m.movieId}"></label><br><br>
-                    <label>Director: <input value="${m.director || ''}" id="director${m.movieId}"></label><br><br>
-                    <label>Rating (1–10): <input type="number" value="${m.rating || ''}" id="rating${m.movieId}"></label><br><br>
-
-                    <button onclick="updateMovie('${m.movieId}')">Update</button>
-                    <button onclick="deleteMovie('${m.movieId}')" style="background:red;color:white;">Delete</button>
-                </div>
-            `;
-
-            list.appendChild(div);
-        });
-    }
-
-    async function updateMovie(id) {
-    const movie = {
-        title: document.getElementById("title" + id).value,
-        genre: document.getElementById("genre" + id).value,
-        releaseYear: parseInt(document.getElementById("releaseYear" + id).value) || null,
-        director: document.getElementById("director" + id).value,
-        rating: parseInt(document.getElementById("rating" + id).value) || null
-    };
-
-    const res = await fetch(`${api}/${id}`, {
-        method: "PUT",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(movie)
-    });
-
-    if (!res.ok) {
-        const errorData = await res.json();
-        let message = '';
-        for (let key in errorData) {
-            message += `${key}: ${errorData[key]}\n`;
-        }
-        alert(message);
-        return;
-    }
-
-    loadMovies();
-}
-
-
-    async function deleteMovie(id) {
-        await fetch(`${api}/${id}`, { method: "DELETE" });
-        loadMovies();
-    }
-
-    // Load movies on page load
-    loadMovies();
-</script>
 
 </body>
 </html>
