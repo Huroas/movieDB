@@ -2,12 +2,11 @@ package codemen.task.movieDB.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "movies")
+@Table(name = "movies", indexes = {@Index(name = "idx_title", columnList = "title")})
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

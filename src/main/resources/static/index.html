@@ -9,22 +9,32 @@
 <body>
 
 <!-- Haku -->
-<div>
-    <input type="text" id="searchInput" placeholder="Search by title" class="search-input">
-</div>
-<div class="search-actions">
-    <button onclick="searchMovie()">Search</button>
-    <button onclick="loadMovies()">Clear</button>
-</div>
-
-<!-- Top bar napit -->
-<div class="top-bar">
-    <button onclick="showAddForm()">Add Movie</button>
-    <button onclick="login()">Login</button>
+<div class="search-panel">
+    <h3>Search Movies</h3>
+    <div class="search-row">
+        <input id="searchId" placeholder="Id">
+        <input id="searchTitle" placeholder="Title">
+        <input id="searchGenre" placeholder="Genre">
+        <input id="searchYear" type="number" placeholder="Year">
+        <input id="searchRating" type="number" placeholder="Min Rating">
+        <button class="login-btn" onclick="login()">Login</button>
+    </div>
+    <div class="search-actions">
+        <button onclick="performSearch()">Search</button>
+        <button onclick="clearSearch()">Clear</button>
+    </div>
 </div>
 
 <h2>Movies</h2>
 <div id="movie-list"></div>
+<div class="list-actions">
+    <button onclick="showAddForm()">Add Movie</button>
+</div>
+<div class="pagination">
+    <button id="prevPageBtn" onclick="prevPage()">Prev</button>
+    <span id="pageLabel">1 / 1</span>
+    <button id="nextPageBtn" onclick="nextPage()">Next</button>
+</div>
 
 <!-- Add Movie Form -->
 <div id="addForm" class="add-form">
