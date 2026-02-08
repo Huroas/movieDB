@@ -1,6 +1,8 @@
 package codemen.task.movieDB.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -17,6 +19,9 @@ public class Movie {
     String genre;
     String director;
     Integer releaseYear;
+
+    @Min(value = 1, message = "Rating must be at least 1")
+    @Max(value = 10, message = "Rating cannot be more than 10")
     Integer rating;
 
     @Version
