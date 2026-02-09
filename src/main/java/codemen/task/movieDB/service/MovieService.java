@@ -1,11 +1,11 @@
 package codemen.task.movieDB.service;
 
-import org.springframework.stereotype.Service;
 import codemen.task.movieDB.model.Movie;
 import codemen.task.movieDB.repository.MovieRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class MovieService {
@@ -16,12 +16,16 @@ public class MovieService {
         this.repository = repository;
     }
 
-    public List<Movie> getAllMovies() {
-        return repository.findAll();
+    public Page<Movie> getAllMovies(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
-    public List<Movie> getMoviesByTitle(String title) {
-        return repository.findByTitleContainingIgnoreCase(title);
+    public Movie getMovieById(String id){
+        return repository.findById(id).orElse(null);
+    }
+
+    public Page<Movie> searchMovies(String id, String title, String genre, Integer year, Integer rating, Pageable pageable) {
+        return repository.searchMovies(normalize(id), normalize(title), normalize(genre), year, rating, pageable);
     }
 
     @Transactional
@@ -44,5 +48,13 @@ public class MovieService {
     @Transactional
     public void deleteMovie(String id) {
         repository.deleteById(id);
+    }
+
+    private String normalize(String value) {
+        if (value == null) {
+            return null;
+        }
+        String trimmed = value.trim();
+        return trimmed.isEmpty() ? null : trimmed;
     }
 }

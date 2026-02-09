@@ -1,0 +1,177 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+.search-panel {
+    margin: 20px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.search-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+}
+
+.search-row input {
+    padding: 4px;
+}
+
+.search-row #searchYear {
+    width: 90px;
+}
+
+.search-row #searchRating {
+    width: 120px;
+}
+
+.search-row #searchId {
+    min-width: 220px;
+}
+
+.search-row .login-btn {
+    margin-left: auto;
+}
+
+.search-actions {
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+.movie {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.add-form {
+    display: none;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+.details {
+    display: none;
+    margin-top: 10px;
+}
+
+.details-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.details-left,
+.details-right {
+    flex: 1 1 260px;
+}
+
+.details-left .field-row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.details-left .field-row label {
+    font-weight: 600;
+}
+
+.details-left .field-row input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.details-right textarea {
+    width: 100%;
+    min-height: 120px;
+    resize: vertical;
+}
+
+.details-actions {
+    margin-top: 6px;
+}
+
+.reviews-section {
+    margin-top: 12px;
+}
+
+.reviews-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    user-select: none;
+    margin: 6px 0;
+}
+
+.reviews-body {
+    margin-top: 6px;
+}
+
+.reviews-pagination {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.review-item {
+    padding: 6px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.review-meta {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 2px;
+}
+
+.review-text {
+    white-space: pre-wrap;
+}
+
+.hidden {
+    display: none;
+}
+
+.empty {
+    color: #666;
+    font-style: italic;
+    padding: 8px 0;
+}
+
+.list-actions {
+    margin: 10px 0;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+button {
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.arrow {
+    cursor: pointer;
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+.btn-danger {
+    background: red;
+    color: white;
+}

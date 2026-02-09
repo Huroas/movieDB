@@ -36,12 +36,14 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/index.html", "/favicon.ico", "/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/movies", "/api/movies/search").permitAll()
+                        .requestMatchers("/", "/index.html", "/error", "/favicon.ico", "/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
+                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/movies/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/movies").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/movies/*/reviews").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/movies/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/movies/**").authenticated()
-                        .anyRequest().denyAll()
+                        .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());
         return http.build();
