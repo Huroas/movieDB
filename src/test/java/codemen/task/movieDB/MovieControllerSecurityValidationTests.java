@@ -80,6 +80,21 @@ class MovieControllerSecurityValidationTests {
     }
 
     @Test
+    void createMovie_invalidRating_returnsValidationError() throws Exception {
+        Map<String, Object> payload = Map.of(
+                "title", "Test movie",
+                "rating", 11
+        );
+
+        mockMvc.perform(post("/api/movies")
+                        .header(HttpHeaders.AUTHORIZATION, basicAuthHeader())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.rating").value("Rating cannot be more than 10"));
+    }
+
+    @Test
     void updateMovie_requiresAuth() throws Exception {
         Movie movie = new Movie();
         movie.setTitle("Original title");
@@ -107,5 +122,40 @@ class MovieControllerSecurityValidationTests {
                         .content(objectMapper.writeValueAsString(payload)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.title").value("Title is missing"));
+    }
+
+    @Test
+    void updateMovie_invalidRating_returnsValidationError() throws Exception {
+        Movie movie = new Movie();
+        movie.setTitle("Original title");
+        Movie saved = movieRepository.save(movie);
+
+        Map<String, Object> payload = Map.of(
+                "title", "Updated title",
+                "rating", 0
+        );
+
+        mockMvc.perform(put("/api/movies/{id}", saved.getMovieId())
+                        .header(HttpHeaders.AUTHORIZATION, basicAuthHeader())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.rating").value("Rating must be at least 1"));
+    }
+
+    @Test
+    void createReview_blankText_returnsValidationError() throws Exception {
+        Movie movie = new Movie();
+        movie.setTitle("Review target");
+        Movie saved = movieRepository.save(movie);
+
+        Map<String, Object> payload = Map.of("review", "");
+
+        mockMvc.perform(post("/api/movies/{id}/reviews", saved.getMovieId())
+                        .header(HttpHeaders.AUTHORIZATION, basicAuthHeader())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.review").value("Review is missing"));
     }
 }
